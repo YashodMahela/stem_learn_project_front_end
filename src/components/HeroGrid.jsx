@@ -1,4 +1,7 @@
+import { Link } from "react-router";
+
 function HeroGrid() {
+
     return (
         <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 px-4 lg:px-16 min-h-[50vh] md:min-h-[70vh] gap-4 mt-4">
             {/* Hero banner*/}
@@ -27,9 +30,12 @@ function HeroGrid() {
                     </p>
 
                     <div className="mt-6 sm:mt-8">
-                        <button className="px-6 py-3 bg-pink-900 hover:bg-gray-400 text-white font-semibold rounded-full shadow-md transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-xl">
-                            Explore Now
-                        </button>
+                        <Link
+                            to="/shop"
+                            className="px-6 py-3 bg-pink-900 hover:bg-gray-400 text-white font-semibold rounded-full shadow-md transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-xl inline-block"
+                        >
+                            Shop Now
+                        </Link>
                     </div>
                 </div>
             </div>

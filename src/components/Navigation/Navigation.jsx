@@ -1,15 +1,12 @@
+import { Link } from "react-router";
 import styles from "./Navigation.module.css";
 
 function Navigation() {
   return (
     <header className={styles.navbar}>
-      <div className={styles.logo}>Mebius</div>
+      <Link to="/" className={styles.logo}>Mebius</Link>
       <nav>
-        <a href="">Shoes</a>
-        <a href="">T-shirts</a>
-        <a href="">Shorts</a>
-        <a href="">Pants</a>
-        <a href="">Socks</a>
+
       </nav>
       <div className={styles.controls}>
         <div className={styles.icons}>

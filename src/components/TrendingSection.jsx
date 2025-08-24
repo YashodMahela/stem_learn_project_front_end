@@ -21,8 +21,6 @@ function TrendingSection() {
         error: productsFetchError,
     } = useGetAllProductsQuery();
 
-    console.log("Categories:", categories);
-    console.log("Products:", products);
 
     // Handle loading
     if (categoriesLoading || productsLoading) {
