@@ -21,10 +21,14 @@ function TrendingSection() {
         error: productsFetchError,
     } = useGetAllProductsQuery();
 
-
     // Handle loading
     if (categoriesLoading || productsLoading) {
-        return <p className="text-center py-8">Loading...</p>;
+        return (
+            <div className="flex justify-center items-center py-16">
+                <span className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-pink-600"></span>
+                <span className="ml-4 text-pink-700 font-semibold">Loading trending products...</span>
+            </div>
+        );
     }
 
     // Handle error
@@ -44,32 +48,47 @@ function TrendingSection() {
             : products.filter((product) => product.categoryId === selectedCategoryId);
 
     return (
-        <section className="px-4 lg:px-16 py-8">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0">
-                <h2 className="text-2xl sm:text-3xl">Trending</h2>
-                <div className="flex flex-wrap items-center gap-2 sm:gap-x-4 max-w-full overflow-x-auto pb-2">
-                    <CategoryButton
-                        key="ALL"
-                        category={{ _id: "ALL", name: "All" }}
-                        onClick={() => setSelectedCategoryId("ALL")}
-                        selectedCategoryId={selectedCategoryId}
-                    />
-                    {categories.map((category) => (
+        <section className="px-4 lg:px-16 py-12">
+            <div className="bg-white/90 rounded-2xl shadow-xl p-8">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0 mb-6">
+                    <div>
+                        <h2 className="text-3xl font-bold text-gray-900 mb-2 tracking-tight">🔥 Trending Now</h2>
+                        <p className="text-gray-600 text-base max-w-xl">
+                            Discover the most popular picks this week. Shop the latest styles, colors, and categories everyone loves!
+                        </p>
+                    </div>
+                    <div className="flex flex-wrap items-center gap-2 sm:gap-x-4 max-w-full overflow-x-auto pb-2">
                         <CategoryButton
-                            key={category._id}
-                            category={category}
-                            onClick={() => setSelectedCategoryId(category._id)}
+                            key="ALL"
+                            category={{ _id: "ALL", name: "All" }}
+                            onClick={() => setSelectedCategoryId("ALL")}
                             selectedCategoryId={selectedCategoryId}
                         />
-                    ))}
+                        {categories.map((category) => (
+                            <CategoryButton
+                                key={category._id}
+                                category={category}
+                                onClick={() => setSelectedCategoryId(category._id)}
+                                selectedCategoryId={selectedCategoryId}
+                            />
+                        ))}
+                    </div>
                 </div>
-            </div>
 
-            {/* Products Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mt-4 gap-4 md:gap-x-4 md:gap-y-8">
-                {filteredProducts.map((product) => (
-                    <SimpleProductCard key={product._id} product={product} />
-                ))}
+                {/* Products Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-x-6 md:gap-y-10">
+                    {filteredProducts.length > 0 ? (
+                        filteredProducts.map((product) => (
+                            <div className="transition-transform duration-200 hover:-translate-y-1 hover:shadow-2xl">
+                                <SimpleProductCard key={product._id} product={product} />
+                            </div>
+                        ))
+                    ) : (
+                        <div className="col-span-full text-center py-12 text-gray-500 text-lg">
+                            No trending products found in this category.
+                        </div>
+                    )}
+                </div>
             </div>
         </section>
     );
