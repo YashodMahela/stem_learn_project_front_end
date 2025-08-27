@@ -15,7 +15,7 @@ export const api = createApi({   // 👈 export it here (lowercase is common con
         }),
 
         getFilteredProducts: builder.query({
-            query: ({ category, color,  sortOrder, page = 1, limit = 20 } = {}) => {
+            query: ({ category, color, sortOrder, page = 1, limit = 20 } = {}) => {
                 const params = new URLSearchParams();
 
                 if (category && category !== 'all') params.append('category', category);
@@ -30,8 +30,16 @@ export const api = createApi({   // 👈 export it here (lowercase is common con
         getProductById: builder.query({
             query: (id) => `/products/${id}`,
         }),
+
+        createOrder: builder.mutation({
+            query: (order) => ({
+                url: "/orders",
+                method: "POST",
+                body: order,
+            }),
+        }),
     }),
 });
 
 // Export hooks
-export const { useGetAllProductsQuery, useGetAllCategoriesQuery, useGetAllColorsQuery, useGetFilteredProductsQuery, useGetProductByIdQuery } = api;
+export const { useGetAllProductsQuery, useGetAllCategoriesQuery, useGetAllColorsQuery, useGetFilteredProductsQuery, useGetProductByIdQuery, useCreateOrderMutation } = api;
