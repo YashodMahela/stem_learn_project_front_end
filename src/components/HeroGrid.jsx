@@ -6,7 +6,7 @@ function HeroGrid() {
             {/* Main Hero Banner */}
             <div className="relative col-span-1 lg:col-span-2 rounded-3xl overflow-hidden shadow-2xl group">
                 <img
-                    src="src/assets/hero_image.png"
+                    src="assets/hero_image.png"
                     alt="Hero Banner"
                     className="object-cover w-full h-[420px] md:h-[600px] lg:h-[520px] scale-105 transition-transform duration-700 group-hover:scale-110"
                 />
@@ -39,7 +39,7 @@ function HeroGrid() {
                 {/* Outdoor Active */}
                 <div className="relative rounded-3xl overflow-hidden shadow-2xl group">
                     <img
-                        src="src/assets/hero_image_1.png"
+                        src="assets/hero_image_1.png"
                         alt="Outdoor Active"
                         className="w-full h-full object-cover scale-105 transition-transform duration-700 group-hover:scale-110"
                     />
@@ -56,7 +56,7 @@ function HeroGrid() {
                 {/* Casual Comfort */}
                 <div className="relative rounded-3xl overflow-hidden shadow-2xl group">
                     <img
-                        src="src/assets/hero_image_3.png"
+                        src="assets/hero_image_3.png"
                         alt="Casual Comfort"
                         className="w-full h-full object-cover scale-105 transition-transform duration-700 group-hover:scale-110"
                     />
