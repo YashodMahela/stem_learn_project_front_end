@@ -1,3 +1,4 @@
+
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const api = createApi({   // 👈 export it here (lowercase is common convention)
@@ -38,8 +39,11 @@ export const api = createApi({   // 👈 export it here (lowercase is common con
                 body: order,
             }),
         }),
+        getOrdersByUserId: builder.query({
+            query: (userId) => `/orders?userId=${userId}`,
+        }),
     }),
 });
 
 // Export hooks
-export const { useGetAllProductsQuery, useGetAllCategoriesQuery, useGetAllColorsQuery, useGetFilteredProductsQuery, useGetProductByIdQuery, useCreateOrderMutation } = api;
+export const { useGetAllProductsQuery, useGetAllCategoriesQuery, useGetAllColorsQuery, useGetFilteredProductsQuery, useGetProductByIdQuery, useCreateOrderMutation, useGetOrdersByUserIdQuery } = api;

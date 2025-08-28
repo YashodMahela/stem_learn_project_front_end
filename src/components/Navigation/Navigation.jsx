@@ -41,6 +41,15 @@ function Navigation() {
           >
             Contact
           </Link>
+          {/* Show My Orders only if user is signed in */}
+          <SignedIn>
+            <Link
+              to="/myorders"
+              className="text-gray-700 hover:text-pink-700 font-medium transition"
+            >
+              My Orders
+            </Link>
+          </SignedIn>
         </nav>
 
         {/* Controls */}
