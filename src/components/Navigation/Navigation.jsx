@@ -1,14 +1,19 @@
 import { Link } from "react-router";
 import { ShoppingBag, Search } from "lucide-react";
-import { SignedIn, UserButton, SignedOut } from "@clerk/clerk-react";
+import { SignedIn, UserButton, SignedOut, useUser } from "@clerk/clerk-react";
 import { useSelector } from "react-redux";
 
 function Navigation() {
   const cartItems = useSelector((state) => state.cart.cartItems);
+  const { isLoaded, isSignedIn, user } = useUser();
+
   const cartItemCount = cartItems.reduce(
     (total, item) => total + item.quantity,
     0
   );
+
+  // Get role from Clerk (publicMetadata or privateMetadata depending on where you store it)
+  const role = user?.publicMetadata?.role;
 
   return (
     <header className="w-full bg-white shadow-lg sticky top-0 z-50">
@@ -41,7 +46,8 @@ function Navigation() {
           >
             Contact
           </Link>
-          {/* Show My Orders only if user is signed in */}
+
+          {/* My Orders only if signed in */}
           <SignedIn>
             <Link
               to="/myorders"
@@ -50,11 +56,15 @@ function Navigation() {
               My Orders
             </Link>
           </SignedIn>
+
+          {/* Dashboard only if user is admin */}
+
+
         </nav>
 
         {/* Controls */}
         <div className="flex items-center gap-4">
-          {/* Search Icon */}
+          {/* Search */}
           <button
             aria-label="Search"
             className="p-2 rounded-full hover:bg-pink-50 transition"
@@ -62,7 +72,7 @@ function Navigation() {
             <Search size={22} className="text-gray-700" />
           </button>
 
-          {/* Cart Icon */}
+          {/* Cart */}
           <Link
             to="/shop/cart"
             aria-label="Shopping Bag"
@@ -75,7 +85,17 @@ function Navigation() {
               </span>
             )}
           </Link>
-
+          {/* Dashboard only if user is admin */}
+          {isSignedIn && role === "admin" && (
+          <Link
+            to="/dashboard"
+            className="px-5 py-2.5 rounded-full bg-gradient-to-r from-pink-600 via-pink-700 to-pink-800 
+             text-white font-semibold shadow-md hover:shadow-lg hover:scale-105 
+             transition-all duration-300 ease-in-out"
+          >
+            Dashboard
+          </Link>
+          )}
           {/* User / Auth */}
           <SignedIn>
             <UserButton />
