@@ -1,5 +1,6 @@
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
+import { Alert } from "./ui/alert";
 import {
     Form,
     FormControl,
@@ -14,6 +15,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import { z } from "zod";
+import { useUser } from '@clerk/clerk-react'
+import { useNavigate } from 'react-router';
 
 const shippingAddresFormSchema = z.object({
     line_1: z.string().min(1).max(50),
@@ -23,6 +26,7 @@ const shippingAddresFormSchema = z.object({
 });
 
 function ShippingAddressForm() {
+
     const form = useForm({
         resolver: zodResolver(shippingAddresFormSchema),
         defaultValues: {
@@ -33,22 +37,59 @@ function ShippingAddressForm() {
         },
     });
 
-    const cart = useSelector((state) => state.cart.cartItems);
     const [createOrder, { isLoading }] = useCreateOrderMutation();
+    const cart = useSelector((state) => state.cart.cartItems);
+    const { isSignedIn, user } = useUser();
+    const navigate = useNavigate(); 
+    if (!isSignedIn) {
+        return (<div>Please sign in to continue</div>);
+    }
 
     async function onSubmit(values) {
         try {
-            await createOrder({
+            if (!cart || cart.length === 0) {
+                // alert("Your cart is empty!");
+                return (<Alert variant="destructive">Your cart is empty!</Alert>);
+            }
+
+            // Calculate total amount - FIXED to use 'price' instead of 'amount'
+            const totalAmount = cart.reduce((total, item) => {
+                const price = item.product?.price || 0; // Your products use 'price'
+                const quantity = item.quantity || 0;
+                const itemTotal = price * quantity;
+                return total + itemTotal;
+            }, 0);
+
+
+            if (totalAmount <= 0) {
+                // alert("Invalid total amount. Please check your cart.");
+                return (<Alert variant="destructive">Invalid total amount. Please check your cart.</Alert>);
+            }
+
+            const orderData = {
                 shippingAddress: values,
+                totalAmount: totalAmount, // This will no longer be null
+                userId: user?.id,
                 orderItems: cart.map((item) => ({
-                    productId: item.product._id,
+                    productId: item.product?._id,
                     quantity: item.quantity,
                 })),
-            }).unwrap();
+            };
+
+
+            const result = await createOrder(orderData).unwrap();
+            console.log("Order created successfully:", result);
+            alert("Order created successfully!");
+            setTimeout(() => {
+                navigate('/');
+            }, 2000);
+    
         } catch (error) {
-            console.log(error);
+            console.error("Order creation error:", error);
+            alert("Failed to create order. Please try again.");
         }
     }
+
 
     return (
         <div className="bg-gradient-to-br from-pink-50 via-white to-rose-100 min-h-screen py-12 px-4 lg:px-16">

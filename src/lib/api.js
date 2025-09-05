@@ -42,8 +42,25 @@ export const api = createApi({   // 👈 export it here (lowercase is common con
         getOrdersByUserId: builder.query({
             query: (userId) => `/orders?userId=${userId}`,
         }),
+        getOrderStats: builder.query({
+            query: () => `/orders/stats`,
+        }),
+        getAllOrders: builder.query({
+            query: (status) => {
+                const params = status ? `?status=${status}` : "";
+                return `/orders${params}`;
+            },
+        }),
+        getDailySales: builder.query({
+            query: (range = 7) => {
+                return `/orders/daily-sales?range=${range}`;
+            },
+            providesTags: ['DailySales'],
+            keepUnusedDataFor: 300,
+        }),
     }),
 });
 
+
 // Export hooks
-export const { useGetAllProductsQuery, useGetAllCategoriesQuery, useGetAllColorsQuery, useGetFilteredProductsQuery, useGetProductByIdQuery, useCreateOrderMutation, useGetOrdersByUserIdQuery } = api;
+export const { useGetAllProductsQuery, useGetAllCategoriesQuery, useGetAllColorsQuery, useGetFilteredProductsQuery, useGetProductByIdQuery, useCreateOrderMutation, useGetOrdersByUserIdQuery, useGetOrderStatsQuery, useGetAllOrdersQuery, useGetDailySalesQuery } = api;
