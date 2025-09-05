@@ -20,7 +20,7 @@ export const cartSlice = createSlice({
             foundItem.quantity += 1;
         },
         clearCart: () => {
-            state = [];
+            state.cartItems = [];
         },
     },
 });

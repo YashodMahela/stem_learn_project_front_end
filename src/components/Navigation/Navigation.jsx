@@ -35,16 +35,10 @@ function Navigation() {
             Shop
           </Link>
           <Link
-            to="/about"
-            className="text-gray-700 hover:text-pink-700 font-medium transition"
-          >
-            About
-          </Link>
-          <Link
             to="/contact"
             className="text-gray-700 hover:text-pink-700 font-medium transition"
           >
-            Contact
+            Contact Us
           </Link>
 
           {/* My Orders only if signed in */}
