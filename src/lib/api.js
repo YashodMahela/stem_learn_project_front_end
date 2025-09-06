@@ -58,9 +58,12 @@ export const api = createApi({   // 👈 export it here (lowercase is common con
             providesTags: ['DailySales'],
             keepUnusedDataFor: 300,
         }),
+        getCheckoutSessionStatus: builder.query({
+            query: (sessionId) => `/payments/session-status?session_id=${sessionId}`,
+        }),
     }),
 });
 
 
 // Export hooks
-export const { useGetAllProductsQuery, useGetAllCategoriesQuery, useGetAllColorsQuery, useGetFilteredProductsQuery, useGetProductByIdQuery, useCreateOrderMutation, useGetOrdersByUserIdQuery, useGetOrderStatsQuery, useGetAllOrdersQuery, useGetDailySalesQuery } = api;
+export const { useGetAllProductsQuery, useGetAllCategoriesQuery, useGetAllColorsQuery, useGetFilteredProductsQuery, useGetProductByIdQuery, useCreateOrderMutation, useGetOrdersByUserIdQuery, useGetOrderStatsQuery, useGetAllOrdersQuery, useGetDailySalesQuery, useGetCheckoutSessionStatusQuery } = api;
