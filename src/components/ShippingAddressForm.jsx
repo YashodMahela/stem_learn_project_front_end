@@ -78,11 +78,11 @@ function ShippingAddressForm() {
 
 
             const result = await createOrder(orderData).unwrap();
-            console.log("Order created successfully:", result);
-            alert("Order created successfully!");
-            setTimeout(() => {
-                navigate('/');
-            }, 2000);
+            console.log("Order created successfully:", result.order.id);
+            if(result){
+                navigate(`/payment/${result.order.id}`);
+            }
+            
     
         } catch (error) {
             console.error("Order creation error:", error);
