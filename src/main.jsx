@@ -39,7 +39,7 @@ createRoot(document.getElementById("root")).render(
               <Route path="/payment/:orderId" element={<PaymentPage/>}/>
               <Route path="/shop/cart" element={<CartPage />} />
               <Route path="/shop/checkout" element={<CheckoutPage />} />
-              <Route path="/shop/products/:orderId" element={<ProductPage />} />
+              <Route path="/shop/products/:id"element={<ProductPage />} />
               <Route path="/myorders" element={<MyOrdersPage />} />
               <Route path="/dashboard" element={<AdminDashboard />} />
             </Route>
