@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 
 function Navigation() {
   const cartItems = useSelector((state) => state.cart.cartItems);
-  const { isLoaded, isSignedIn, user } = useUser();
+  const { isSignedIn, user } = useUser();
 
   const cartItemCount = cartItems.reduce(
     (total, item) => total + item.quantity,
