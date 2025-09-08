@@ -5,7 +5,7 @@ import { Link } from "react-router";
 import { useGetAllProductsQuery, useGetAllCategoriesQuery } from "../lib/api";
 
 function TrendingSection() {
-    const [selectedCategoryId, setSelectedCategoryId] = useState("ALL");
+    const [selectedCategoryId, setSelectedCategoryId] = useState("68bbe7ea3cc2c965baa7111a");
     
     // Fetch categories and products from API
     const {
@@ -106,12 +106,7 @@ function TrendingSection() {
                     
                     {/* Category Filters */}
                     <div className="flex flex-wrap items-center gap-2 lg:gap-3">
-                        <CategoryButton
-                            key="ALL"
-                            category={{ _id: "ALL", name: "✨ All" }}
-                            onClick={() => setSelectedCategoryId("ALL")}
-                            selectedCategoryId={selectedCategoryId}
-                        />
+                        
                         {categories.map((category) => (
                             <CategoryButton
                                 key={category._id}

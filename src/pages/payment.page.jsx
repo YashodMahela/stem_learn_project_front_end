@@ -1,12 +1,11 @@
 import CartItem from "@/components/CartItem";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Navigate } from "react-router";
 import { useParams } from "react-router";
 import PaymentForm from "@/components/PaymentForm";
 
 function PaymentPage() {
     const cart = useSelector((state) => state.cart.cartItems);
-    const dispatch = useDispatch();
     const { orderId } = useParams();
     if (cart.length === 0) {
         return <Navigate to="/" />;

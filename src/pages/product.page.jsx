@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { ShoppingCart, ArrowLeft, Star, Minus, Plus } from 'lucide-react';
+import React, { useState } from 'react';
+import { ArrowLeft, Star, Minus, Plus } from 'lucide-react';
 import { useGetProductByIdQuery } from '../lib/api';
 import { useParams } from 'react-router';
 import { useDispatch } from "react-redux";
@@ -26,35 +26,9 @@ function ProductPage() {
     console.log("Is Loading:", isLoading);
 
     const [quantity, setQuantity] = useState(1);
-    const [addingToCart, setAddingToCart] = useState(false);
 
     const handleGoBack = () => {
         window.history.back();
-    };
-
-    const handleAddToCart = async () => {
-        setAddingToCart(true);
-        try {
-            const response = await fetch('/api/cart', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    productId: product._id,
-                    quantity: quantity,
-                }),
-            });
-            if (response.ok) {
-                alert('Product added to cart successfully!');
-            } else {
-                throw new Error('Failed to add to cart');
-            }
-        } catch (err) {
-            alert('Error adding to cart: ' + err.message);
-        } finally {
-            setAddingToCart(false);
-        }
     };
 
     const handleQuantityChange = (change) => {
