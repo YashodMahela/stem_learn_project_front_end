@@ -1,50 +1,40 @@
-
 import React, { useState, useEffect } from 'react';
 import { ShoppingCart, ArrowLeft, Star, Minus, Plus } from 'lucide-react';
 import { useGetProductByIdQuery } from '../lib/api';
 import { useParams } from 'react-router';
+import { useDispatch } from "react-redux";
+import { addToCart } from "@/lib/features/cartSlice";
+import { Button } from "@/components/ui/button";
 
 function ProductPage() {
-    const { productId } = useParams();
+    const dispatch = useDispatch();
+    const { id } = useParams(); // Route is /shop/products/:id
+
+    console.log("URL Params:", useParams());
+    console.log("Product ID from params:", id);
+
     const {
         data: product,
         error,
-    } = useGetProductByIdQuery(productId);
+        isLoading
+    } = useGetProductByIdQuery(id, {
+        skip: !id // ✅ Skip query if id is undefined
+    });
 
     console.log("Product:", product);
-    // const [product, setProduct] = useState({
-    //     "_id": "68a8b8b7f65a860ea074be98",
-    //     "categoryId": "684ebece862a8fe09aa7b322",
-    //     "name": "Nike Air Red",
-    //     "price": 120,
-    //     "stripePriceId": "price_123_air_red",
-    //     "color_id": "68a887fd641b8ac5781b9ed1",
-    //     "image": "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/015653e0-d381-4821-a6d3-aeadbd7f8a44/ZM+SUPERFLY+10+ACADEMY+IC.png",
-    //     "stock": 50,
-    //     "reviews": [],
-    //     "description": "Stylish Nike Air sneakers in red color for everyday comfort.",
-    //     "__v": 0
-    // });
-    const [loading, setLoading] = useState(false);
-    // const [error, setError] = useState(null);
+    console.log("Error:", error);
+    console.log("Is Loading:", isLoading);
+
     const [quantity, setQuantity] = useState(1);
     const [addingToCart, setAddingToCart] = useState(false);
 
-    useEffect(() => {
-        // In a real app, you would fetch the product data here
-        // fetchProduct();
-        setLoading(false);
-    }, []);
-
     const handleGoBack = () => {
-        // In a real app with React Router, you would use navigate(-1)
         window.history.back();
     };
 
     const handleAddToCart = async () => {
         setAddingToCart(true);
         try {
-            // Replace with your actual add to cart API call
             const response = await fetch('/api/cart', {
                 method: 'POST',
                 headers: {
@@ -55,9 +45,7 @@ function ProductPage() {
                     quantity: quantity,
                 }),
             });
-
             if (response.ok) {
-                // Show success message or redirect
                 alert('Product added to cart successfully!');
             } else {
                 throw new Error('Failed to add to cart');
@@ -76,7 +64,8 @@ function ProductPage() {
         }
     };
 
-    if (loading) {
+    // ✅ Show loading state while fetching
+    if (isLoading) {
         return (
             <div className="min-h-screen bg-gray-50 flex items-center justify-center">
                 <div className="text-center">
@@ -87,12 +76,32 @@ function ProductPage() {
         );
     }
 
+    // ✅ Handle missing ID
+    if (!id) {
+        return (
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+                <div className="text-center">
+                    <h2 className="text-2xl font-bold text-gray-900 mb-4">Invalid Product URL</h2>
+                    <p className="text-gray-600 mb-6">No product ID found in the URL</p>
+                    <button
+                        onClick={() => window.location.href = '/shop'}
+                        className="bg-rose-600 text-white px-6 py-3 rounded-lg hover:bg-rose-700 transition-colors"
+                    >
+                        Back to Shop
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
     if (error) {
         return (
             <div className="min-h-screen bg-gray-50 flex items-center justify-center">
                 <div className="text-center">
                     <h2 className="text-2xl font-bold text-gray-900 mb-4">Product Not Found</h2>
-                    <p className="text-gray-600 mb-6">{error}</p>
+                    <p className="text-gray-600 mb-6">
+                        {error?.data?.message || error?.message || 'Unable to load product'}
+                    </p>
                     <button
                         onClick={() => window.location.href = '/shop'}
                         className="bg-rose-600 text-white px-6 py-3 rounded-lg hover:bg-rose-700 transition-colors"
@@ -105,7 +114,20 @@ function ProductPage() {
     }
 
     if (!product) {
-        return null;
+        return (
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+                <div className="text-center">
+                    <h2 className="text-2xl font-bold text-gray-900 mb-4">Product Not Found</h2>
+                    <p className="text-gray-600 mb-6">The requested product could not be found</p>
+                    <button
+                        onClick={() => window.location.href = '/shop'}
+                        className="bg-rose-600 text-white px-6 py-3 rounded-lg hover:bg-rose-700 transition-colors"
+                    >
+                        Back to Shop
+                    </button>
+                </div>
+            </div>
+        );
     }
 
     return (
@@ -143,7 +165,6 @@ function ProductPage() {
                                     <h1 className="text-3xl font-bold text-gray-900 mb-4">
                                         {product.name}
                                     </h1>
-
                                     <div className="flex items-center mb-4">
                                         <span className="text-3xl font-bold text-rose-600">
                                             ${product.price}
@@ -153,8 +174,8 @@ function ProductPage() {
                                     {/* Stock Status */}
                                     <div className="flex items-center mb-6">
                                         <span className={`inline-flex px-3 py-1 rounded-full text-sm font-medium ${product.stock > 0
-                                                ? 'bg-green-100 text-green-800'
-                                                : 'bg-red-100 text-red-800'
+                                            ? 'bg-green-100 text-green-800'
+                                            : 'bg-red-100 text-red-800'
                                             }`}>
                                             {product.stock > 0 ? `${product.stock} in stock` : 'Out of stock'}
                                         </span>
@@ -217,23 +238,21 @@ function ProductPage() {
                                             </div>
 
                                             {/* Add to Cart Button */}
-                                            <button
-                                                onClick={handleAddToCart}
-                                                disabled={addingToCart}
-                                                className="w-full bg-rose-600 text-white py-4 px-6 rounded-lg font-semibold hover:bg-rose-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors flex items-center justify-center"
+                                            <Button
+                                                className="w-full"
+                                                onClick={() =>
+                                                    dispatch(
+                                                        addToCart({
+                                                            _id: product._id,
+                                                            name: product.name,
+                                                            price: product.price,
+                                                            image: product.image,
+                                                        })
+                                                    )
+                                                }
                                             >
-                                                {addingToCart ? (
-                                                    <>
-                                                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                                                        Adding to Cart...
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        <ShoppingCart className="w-5 h-5 mr-2" />
-                                                        Add to Cart
-                                                    </>
-                                                )}
-                                            </button>
+                                                Add To Cart
+                                            </Button>
 
                                             <div className="text-center text-sm text-gray-600">
                                                 Total: <span className="font-semibold">${(product.price * quantity).toFixed(2)}</span>
@@ -255,43 +274,7 @@ function ProductPage() {
 
                 {/* Additional Product Information */}
                 <div className="mt-8 bg-white rounded-lg shadow-lg p-8">
-                    {/* <h2 className="text-2xl font-bold text-gray-900 mb-6">Product Information</h2>
-                    <div className="grid md:grid-cols-2 gap-8">
-                        <div>
-                            <h3 className="text-lg font-semibold text-gray-900 mb-4">Specifications</h3>
-                            <div className="space-y-2 text-gray-600">
-                                <div className="flex justify-between">
-                                    <span>Product ID:</span>
-                                    <span className="font-mono text-sm">{product._id}</span>
-                                </div>
-                                <div className="flex justify-between">
-                                    <span>Category ID:</span>
-                                    <span className="font-mono text-sm">{product.categoryId}</span>
-                                </div>
-                                {product.color_id && (
-                                    <div className="flex justify-between">
-                                        <span>Color ID:</span>
-                                        <span className="font-mono text-sm">{product.color_id}</span>
-                                    </div>
-                                )}
-                                {product.stripePriceId && (
-                                    <div className="flex justify-between">
-                                        <span>Stripe Price ID:</span>
-                                        <span className="font-mono text-sm">{product.stripePriceId}</span>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                        <div>
-                            <h3 className="text-lg font-semibold text-gray-900 mb-4">Shipping & Returns</h3>
-                            <div className="space-y-2 text-gray-600">
-                                <p>• Free shipping on orders over $100</p>
-                                <p>• 30-day return policy</p>
-                                <p>• Ships within 1-2 business days</p>
-                                <p>• Customer support available 24/7</p>
-                            </div>
-                        </div>
-                    </div> */}
+                    {/* Your additional content here */}
                 </div>
             </div>
         </div>

@@ -6,11 +6,16 @@ function MyOrdersPage() {
     const { user } = useUser();
     const userId = user?.id;
     console.log("Current User ID:", userId);
-    // Only fetch orders if user is signed in
-    const { data: orders, isLoading, isError, error } = useGetOrdersByUserIdQuery(userId, {
+    
+    // Fetch orders data
+    const { data: ordersData, isLoading, isError, error } = useGetOrdersByUserIdQuery(userId, {
         skip: !userId,
     });
-
+    
+    // Extract the orders array from the response
+    const orders = ordersData?.orders || []; // ✅ Access the orders property
+    
+    
     return (
         <main className="bg-gradient-to-br from-pink-50 via-white to-rose-100 min-h-screen py-12 px-4 lg:px-16">
             <div className="max-w-5xl mx-auto">
@@ -45,6 +50,7 @@ function MyOrdersPage() {
                         )}
                         {!isLoading && !isError && (
                             <>
+                                {/* ✅ Now checking the extracted orders array */}
                                 {orders && orders.length > 0 ? (
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                         {orders.map((order) => (
@@ -85,7 +91,11 @@ function MyOrdersPage() {
                                     </div>
                                 ) : (
                                     <div className="text-center py-12 text-gray-500 text-lg">
+                                        {/* ✅ Better debugging message */}
                                         You have no orders yet.
+                                        <div className="mt-2 text-xs text-gray-400">
+                                            Debug: ordersData = {JSON.stringify(ordersData)}
+                                        </div>
                                     </div>
                                 )}
                             </>

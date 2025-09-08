@@ -40,8 +40,8 @@ export const api = createApi({   // 👈 export it here (lowercase is common con
             }),
         }),
         getOrdersByUserId: builder.query({
-            query: (userId) => `/orders?userId=${userId}`,
-        }),
+            query: (userId) => `/orders/by-user/${userId}`,
+        }),        
         getOrderStats: builder.query({
             query: () => `/orders/stats`,
         }),

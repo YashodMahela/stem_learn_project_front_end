@@ -23,7 +23,7 @@ function Navigation() {
           to="/"
           className="text-2xl font-extrabold text-pink-700 tracking-tight hover:text-pink-900 transition"
         >
-          Mebius
+          TrendTide
         </Link>
 
         {/* Navigation Links */}
