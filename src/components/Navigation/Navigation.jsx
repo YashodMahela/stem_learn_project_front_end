@@ -23,7 +23,7 @@ function Navigation() {
           to="/"
           className="text-2xl font-extrabold text-pink-700 tracking-tight hover:text-pink-900 transition"
         >
-          TrendTide
+          <img src="../../../public/assets/logo.png" alt="TrendTide" width={200} height={700}/>
         </Link>
 
         {/* Navigation Links */}
