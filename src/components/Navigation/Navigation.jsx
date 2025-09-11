@@ -24,7 +24,7 @@ function Navigation() {
           className="text-2xl font-extrabold text-pink-700 tracking-tight hover:text-pink-900 transition"
         >
           <img
-            src="../../../public/assets/logo.png"
+            src="/assets/logo.png"
             alt="TrendTide"
             className="w-40 h-auto max-w-full"
           />
