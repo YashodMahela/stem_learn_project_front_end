@@ -23,8 +23,13 @@ function Navigation() {
           to="/"
           className="text-2xl font-extrabold text-pink-700 tracking-tight hover:text-pink-900 transition"
         >
-          <img src="../../../public/assets/logo.png" alt="TrendTide" width={200} height={700}/>
+          <img
+            src="../../../public/assets/logo.png"
+            alt="TrendTide"
+            className="w-40 h-auto max-w-full"
+          />
         </Link>
+
 
         {/* Navigation Links */}
         <nav className="hidden md:flex gap-8 ml-12">
@@ -81,14 +86,14 @@ function Navigation() {
           </Link>
           {/* Dashboard only if user is admin */}
           {isSignedIn && role === "admin" && (
-          <Link
-            to="/dashboard"
-            className="px-5 py-2.5 rounded-full bg-gradient-to-r from-pink-600 via-pink-700 to-pink-800 
+            <Link
+              to="/dashboard"
+              className="px-5 py-2.5 rounded-full bg-gradient-to-r from-pink-600 via-pink-700 to-pink-800 
              text-white font-semibold shadow-md hover:shadow-lg hover:scale-105 
              transition-all duration-300 ease-in-out"
-          >
-            Dashboard
-          </Link>
+            >
+              Dashboard
+            </Link>
           )}
           {/* User / Auth */}
           <SignedIn>
