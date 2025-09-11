@@ -26,7 +26,7 @@ function Navigation() {
           <img
             src="/assets/logo.png"
             alt="TrendTide"
-            className="w-40 h-auto max-w-full"
+            className="w-30 h-auto max-w-full"
           />
         </Link>
 
