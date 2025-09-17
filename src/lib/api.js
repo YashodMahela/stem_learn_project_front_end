@@ -3,7 +3,24 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const api = createApi({   // 👈 export it here (lowercase is common convention)
     reducerPath: "api",
-    baseQuery: fetchBaseQuery({ baseUrl: import.meta.env.VITE_BACKEND_URL }),
+    baseQuery: fetchBaseQuery({
+        baseUrl: import.meta.env.VITE_BACKEND_URL,
+        prepareHeaders: async (headers) => {
+            return new Promise((resolve) => {
+                async function checkToken() {
+                    const clerk = window.Clerk;
+                    if (clerk) {
+                        const token = await clerk.session?.getToken();
+                        headers.set("Authorization", `Bearer ${token}`);
+                        resolve(headers);
+                    } else {
+                        setTimeout(checkToken, 500);
+                    }
+                }
+                checkToken();
+            });
+        },
+    }),
     endpoints: (builder) => ({
         getAllProducts: builder.query({
             query: () => "/products",
@@ -41,7 +58,7 @@ export const api = createApi({   // 👈 export it here (lowercase is common con
         }),
         getOrdersByUserId: builder.query({
             query: (userId) => `/orders/by-user/${userId}`,
-        }),        
+        }),
         getOrderStats: builder.query({
             query: () => `/orders/stats`,
         }),
@@ -61,9 +78,16 @@ export const api = createApi({   // 👈 export it here (lowercase is common con
         getCheckoutSessionStatus: builder.query({
             query: (sessionId) => `/payments/session-status?session_id=${sessionId}`,
         }),
+        createProduct: builder.mutation({
+            query: (product) => ({
+                url: "/products",
+                method: "POST",
+                body: product,
+            }),
+        }),
     }),
 });
 
 
 // Export hooks
-export const { useGetAllProductsQuery, useGetAllCategoriesQuery, useGetAllColorsQuery, useGetFilteredProductsQuery, useGetProductByIdQuery, useCreateOrderMutation, useGetOrdersByUserIdQuery, useGetOrderStatsQuery, useGetAllOrdersQuery, useGetDailySalesQuery, useGetCheckoutSessionStatusQuery } = api;
+export const { useGetAllProductsQuery, useGetAllCategoriesQuery, useGetAllColorsQuery, useGetFilteredProductsQuery, useGetProductByIdQuery, useCreateOrderMutation, useGetOrdersByUserIdQuery, useGetOrderStatsQuery, useGetAllOrdersQuery, useGetDailySalesQuery, useGetCheckoutSessionStatusQuery, useCreateProductMutation } = api;
