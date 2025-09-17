@@ -9,7 +9,7 @@ export default function OrderStatsDashboard() {
     if (isError || !stats) return <p>Error loading stats</p>
 
     return (
-        <div className="p-4 grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
+        <div className="p-4 grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-4 width-full">
             <Card className="bg-blue-50 shadow-md">
                 <CardHeader>
                     <CardTitle>Total Orders</CardTitle>
