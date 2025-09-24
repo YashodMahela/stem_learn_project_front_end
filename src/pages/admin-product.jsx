@@ -67,9 +67,7 @@ export default function AdminProductsDashboard() {
         isLoading,
         isFetching,
         refetch,
-    } = useGetFilteredProductsQuery(filters, {
-        // keepPreviousData: true (if you use react-query) — RTK Query has similar behaviour
-    });
+    } = useGetFilteredProductsQuery(filters);
 
     const {
         data: categoriesData,
@@ -113,7 +111,6 @@ export default function AdminProductsDashboard() {
         }
 
         try {
-            console.table(colorsData);
             await createProduct(newProduct).unwrap();
             setShowAddModal(false);
             setNewProduct({
@@ -136,25 +133,6 @@ export default function AdminProductsDashboard() {
         } finally {
             setCreating(false);
         }
-    };
-
-    // handle delete
-    const handleDelete = async (id) => {
-        if (!confirm("Are you sure you want to delete this product?")) return;
-
-        // try {
-        //     await deleteProduct(id).unwrap();
-        //     // if deleting last item on last page, go back a page
-        //     if (products.length === 1 && filters.page > 1) {
-        //         setFilters((f) => ({ ...f, page: f.page - 1 }));
-        //     } else {
-        //         refetch();
-        //     }
-        //     alert("Deleted");
-        // } catch (err) {
-        //     console.error("Delete failed", err);
-        //     alert("Delete failed. See console for details.");
-        // }
     };
 
     // page change handler
@@ -200,7 +178,6 @@ export default function AdminProductsDashboard() {
         }));
     };
 
-    // Loading / error UI (simple)
     return (
         <AdminSidebar>
             <div className="p-6 bg-white rounded-xl shadow-lg">
@@ -307,13 +284,6 @@ export default function AdminProductsDashboard() {
                                             ))}
                                         </select>
                                         </div>
-                                    {/* <div className="space-y-1"> colorsData
-                                        <Label>Color ID</Label>
-                                        <Input
-                                            value={newProduct.color_id}
-                                            onChange={(e) => setNewProduct((s) => ({ ...s, color_id: e.target.value }))}
-                                        />
-                                    </div> */}
                                 </div>
 
                                 {/* Image URL */}

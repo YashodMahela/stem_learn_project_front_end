@@ -1,32 +1,30 @@
 import { useState } from "react";
 import { Link } from "react-router";
 import { ShoppingBag, Search, Menu, X } from "lucide-react";
-import { SignedIn, UserButton, SignedOut, useUser } from "@clerk/clerk-react";
+import { SignedIn, SignedOut, UserButton, useUser } from "@clerk/clerk-react";
 import { useSelector } from "react-redux";
 
 function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const cartItems = useSelector((state) => state.cart.cartItems);
-  const { isSignedIn, user } = useUser();
 
-  const cartItemCount = cartItems.reduce(
-    (total, item) => total + item.quantity,
-    0
-  );
-
+  const { isSignedIn, user, isLoaded } = useUser(); // <-- use isLoaded
+  const cartItemCount = cartItems.reduce((total, item) => total + item.quantity, 0);
   const role = user?.publicMetadata?.role;
+
+  if (!isLoaded) return null; 
 
   return (
     <header className="w-full bg-white shadow-lg sticky top-0 z-50">
       <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-3">
+        
         {/* Logo */}
         <Link to="/" className="text-2xl font-extrabold text-pink-700 tracking-tight hover:text-pink-900 transition">
           <img src="/assets/logo.png" alt="TrendTide" className="w-28 h-auto max-w-full" />
         </Link>
 
-        {/* Mobile Controls: Cart + User + Menu */}
+        {/* Mobile Controls */}
         <div className="flex items-center gap-2 md:hidden">
-          {/* Cart */}
           <Link to="/shop/cart" aria-label="Shopping Bag" className="relative p-2 rounded-full hover:bg-pink-50 transition">
             <ShoppingBag size={24} className="text-gray-700" />
             {cartItemCount > 0 && (
@@ -36,10 +34,8 @@ function Navigation() {
             )}
           </Link>
 
-          {/* User Button */}
           {isSignedIn && <UserButton />}
 
-          {/* Hamburger */}
           <button
             className="p-2 rounded-md hover:bg-pink-50 transition"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -63,7 +59,6 @@ function Navigation() {
             <Search size={22} className="text-gray-700" />
           </button>
 
-          {/* Cart */}
           <Link to="/shop/cart" aria-label="Shopping Bag" className="relative p-2 rounded-full hover:bg-pink-50 transition">
             <ShoppingBag size={22} className="text-gray-700" />
             {cartItemCount > 0 && (
@@ -82,6 +77,7 @@ function Navigation() {
           <SignedIn>
             <UserButton />
           </SignedIn>
+
           <SignedOut>
             <div className="flex gap-2">
               <Link to="/sign-in" className="px-3 py-1 rounded-full bg-pink-700 text-white font-semibold hover:bg-pink-900 transition text-sm">Sign In</Link>
