@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import {
     useGetFilteredProductsQuery,
     useCreateProductMutation,
+    useGetAllCategoriesQuery,
+    useGetAllColorsQuery,
     // useDeleteProductMutation,
 } from "../lib/api";
 
@@ -31,6 +33,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
 import AdminSidebar from "./admin-sliderbar";
 export default function AdminProductsDashboard() {
     // Filters + pagination
@@ -52,7 +55,7 @@ export default function AdminProductsDashboard() {
         stripePriceId: "",
         categoryId: "",
         color_id: "",
-        image: "", // URL (or you can implement file upload)
+        image: "",
         stock: 0,
         description: "",
     });
@@ -68,13 +71,16 @@ export default function AdminProductsDashboard() {
         // keepPreviousData: true (if you use react-query) — RTK Query has similar behaviour
     });
 
+    const {
+        data: categoriesData,
+    } = useGetAllCategoriesQuery();
+    const {
+        data: colorsData,
+    } = useGetAllColorsQuery(); 
     const [createProduct] = useCreateProductMutation();
     // const [deleteProduct] = useDeleteProductMutation();
 
     // Normalize various possible API returns:
-    // - server returns { products: [...], totalPages, totalItems }
-    // - or server returns array directly
-    // - or server returns { data: { products: [...] } } (less likely)
     const products = Array.isArray(data)
         ? data
         : Array.isArray(data?.products)
@@ -107,6 +113,7 @@ export default function AdminProductsDashboard() {
         }
 
         try {
+            console.table(colorsData);
             await createProduct(newProduct).unwrap();
             setShowAddModal(false);
             setNewProduct({
@@ -180,6 +187,19 @@ export default function AdminProductsDashboard() {
         return range;
     };
 
+    const handleCategoryChange = (e) => {
+        setNewProduct((prev) => ({
+            ...prev,
+            [e.target.name]: e.target.value
+        }));
+    };
+    const handleColorChange = (e) => {
+        setNewProduct((prev) => ({
+            ...prev,
+            [e.target.name]: e.target.value
+        }));
+    };
+
     // Loading / error UI (simple)
     return (
         <AdminSidebar>
@@ -188,7 +208,6 @@ export default function AdminProductsDashboard() {
                     <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-600 to-purple-600">
                         Products Dashboard
                     </h1>
-
                     <Dialog open={showAddModal} onOpenChange={setShowAddModal}>
                         <DialogTrigger asChild>
                             <Button className="bg-gradient-to-r from-pink-500 to-purple-600 text-white hover:opacity-90">
@@ -202,65 +221,127 @@ export default function AdminProductsDashboard() {
                             </DialogHeader>
 
                             <form onSubmit={handleAddProduct} className="space-y-3 mt-4">
-                                <Input
-                                    placeholder="Name *"
-                                    value={newProduct.name}
-                                    onChange={(e) => setNewProduct((s) => ({ ...s, name: e.target.value }))}
-                                    required
-                                />
-
-                                <div className="grid grid-cols-2 gap-2">
+                                {/* Product Name */}
+                                <div className="space-y-1">
+                                    <Label>
+                                        Name <span className="text-red-500">*</span>
+                                    </Label>
                                     <Input
-                                        placeholder="Price (number) *"
-                                        type="number"
-                                        value={newProduct.price}
-                                        onChange={(e) => setNewProduct((s) => ({ ...s, price: Number(e.target.value) }))}
+                                        value={newProduct.name}
+                                        onChange={(e) => setNewProduct((s) => ({ ...s, name: e.target.value }))}
                                         required
-                                    />
-                                    <Input
-                                        placeholder="Stock (number)"
-                                        type="number"
-                                        value={newProduct.stock}
-                                        onChange={(e) => setNewProduct((s) => ({ ...s, stock: Number(e.target.value) }))}
                                     />
                                 </div>
 
-                                <Input
-                                    placeholder="stripePriceId *"
-                                    value={newProduct.stripePriceId}
-                                    onChange={(e) => setNewProduct((s) => ({ ...s, stripePriceId: e.target.value }))}
-                                    required
-                                />
-
+                                {/* Price and Stock */}
                                 <div className="grid grid-cols-2 gap-2">
+                                    <div className="space-y-1">
+                                        <Label>
+                                            Price (number) <span className="text-red-500">*</span>
+                                        </Label>
+                                        <Input
+                                            type="number"
+                                            value={newProduct.price}
+                                            onChange={(e) => setNewProduct((s) => ({ ...s, price: Number(e.target.value) }))}
+                                            required
+                                        />
+                                    </div>
+                                    <div className="space-y-1">
+                                        <Label>Stock (number)</Label>
+                                        <Input
+                                            type="number"
+                                            value={newProduct.stock}
+                                            onChange={(e) => setNewProduct((s) => ({ ...s, stock: Number(e.target.value) }))}
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* Stripe Price ID */}
+                                <div className="space-y-1">
+                                    <Label>
+                                        Stripe Price ID <span className="text-red-500">*</span>
+                                    </Label>
                                     <Input
-                                        placeholder="Category ID *"
-                                        value={newProduct.categoryId}
-                                        onChange={(e) => setNewProduct((s) => ({ ...s, categoryId: e.target.value }))}
+                                        value={newProduct.stripePriceId}
+                                        onChange={(e) => setNewProduct((s) => ({ ...s, stripePriceId: e.target.value }))}
                                         required
-                                    />
-                                    <Input
-                                        placeholder="Color ID"
-                                        value={newProduct.color_id}
-                                        onChange={(e) => setNewProduct((s) => ({ ...s, color_id: e.target.value }))}
                                     />
                                 </div>
 
-                                <Input
-                                    placeholder="Image URL *"
-                                    value={newProduct.image}
-                                    onChange={(e) => setNewProduct((s) => ({ ...s, image: e.target.value }))}
-                                    required
-                                />
+                                {/* Category and Color */}
+                                <div className="grid grid-cols-2 gap-2">
+                                    <div className="space-y-1">
+                                        <Label>
+                                            Category <span className="text-red-500">*</span>
+                                        </Label>
+                                        <select
+                                            name="categoryId"
+                                            value={newProduct.categoryId}
+                                            onChange={handleCategoryChange}
+                                            className="w-full p-2 border rounded bg-white focus:outline-none focus:ring-2 focus:ring-pink-500"
+                                            required
+                                        >
+                                            <option value="">Select category</option>
+                                            {categoriesData?.map((category) => (
+                                                <option key={category._id} value={String(category._id)}>
+                                                    {category.name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div className="space-y-1">
+                                        <Label>Color <span className="text-red-500">*</span>
+                                        </Label>
+                                        <select
+                                            name="color_id"
+                                            value={newProduct.color_id}
+                                            onChange={handleColorChange}
+                                            className="w-full p-2 border rounded bg-white focus:outline-none focus:ring-2 focus:ring-pink-500"
+                                            required
+                                        >
+                                            <option value="">Select color</option>
+                                            {colorsData?.map((color) => (
+                                                <option key={color._id} value={String(color._id)}>
+                                                    {color.name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        </div>
+                                    {/* <div className="space-y-1"> colorsData
+                                        <Label>Color ID</Label>
+                                        <Input
+                                            value={newProduct.color_id}
+                                            onChange={(e) => setNewProduct((s) => ({ ...s, color_id: e.target.value }))}
+                                        />
+                                    </div> */}
+                                </div>
 
-                                <textarea
-                                    placeholder="Description *"
-                                    value={newProduct.description}
-                                    onChange={(e) => setNewProduct((s) => ({ ...s, description: e.target.value }))}
-                                    className="w-full p-2 border rounded"
-                                    required
-                                />
+                                {/* Image URL */}
+                                <div className="space-y-1">
+                                    <Label>
+                                        Image URL <span className="text-red-500">*</span>
+                                    </Label>
+                                    <Input
+                                        value={newProduct.image}
+                                        onChange={(e) => setNewProduct((s) => ({ ...s, image: e.target.value }))}
+                                        required
+                                    />
+                                </div>
 
+                                {/* Description */}
+                                <div className="space-y-1">
+                                    <Label>
+                                        Description <span className="text-red-500">*</span>
+                                    </Label>
+                                    <textarea
+                                        value={newProduct.description}
+                                        onChange={(e) => setNewProduct((s) => ({ ...s, description: e.target.value }))}
+                                        className="w-full p-2 border rounded"
+                                        required
+                                    />
+                                </div>
+
+                                {/* Buttons */}
                                 <div className="flex gap-2">
                                     <Button
                                         type="submit"
