@@ -12,8 +12,6 @@ const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 const PaymentForm = ({ orderId }) => {
     const fetchClientSecret = useCallback(async () => {
         try {
-            console.log("Fetching client secret for orderId:", orderId);
-            
             // Create a Checkout Session
             const response = await fetch(`${BASE_URL}/payments/create-checkout-session`, {
                 method: "POST",
@@ -23,16 +21,11 @@ const PaymentForm = ({ orderId }) => {
                 body: JSON.stringify({ orderId }),
             });
 
-            console.log("Response status:", response.status);
-
             if (!response.ok) {
-                const errorData = await response.text();
-                console.error("Backend error:", errorData);
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
 
             const data = await response.json();
-            console.log("Backend response data:", data);
 
             // Your backend returns 'client_secret', not 'clientSecret'
             return data.client_secret;

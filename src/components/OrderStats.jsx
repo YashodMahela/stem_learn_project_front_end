@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { useGetOrderStatsQuery } from "@/lib/api" // adjust import path
-import { Loader2 } from "lucide-react"
+
 
 export default function OrderStatsDashboard() {
     const { data: stats, isLoading, isError } = useGetOrderStatsQuery()

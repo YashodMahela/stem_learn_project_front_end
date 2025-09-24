@@ -10,9 +10,6 @@ function ProductPage() {
     const dispatch = useDispatch();
     const { id } = useParams(); // Route is /shop/products/:id
 
-    console.log("URL Params:", useParams());
-    console.log("Product ID from params:", id);
-
     const {
         data: product,
         error,
@@ -20,10 +17,6 @@ function ProductPage() {
     } = useGetProductByIdQuery(id, {
         skip: !id // ✅ Skip query if id is undefined
     });
-
-    console.log("Product:", product);
-    console.log("Error:", error);
-    console.log("Is Loading:", isLoading);
 
     const [quantity, setQuantity] = useState(1);
 
