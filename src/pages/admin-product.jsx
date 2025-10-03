@@ -4,7 +4,6 @@ import {
     useCreateProductMutation,
     useGetAllCategoriesQuery,
     useGetAllColorsQuery,
-    // useDeleteProductMutation,
 } from "../lib/api";
 
 import {
@@ -75,6 +74,7 @@ export default function AdminProductsDashboard() {
     const {
         data: colorsData,
     } = useGetAllColorsQuery(); 
+
     const [createProduct] = useCreateProductMutation();
     // const [deleteProduct] = useDeleteProductMutation();
 

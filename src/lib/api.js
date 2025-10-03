@@ -85,9 +85,15 @@ export const api = createApi({   // 👈 export it here (lowercase is common con
                 body: product,
             }),
         }),
+        getNewArrivals: builder.query({
+            query: (categoryId) =>
+                categoryId && categoryId !== "ALL"
+                    ? `products/new-arrival-products?selectedCategoryId=${categoryId}`
+                    : "products/new-arrival-products?selectedCategoryId=ALL",
+        }),
     }),
 });
 
 
 // Export hooks
-export const { useGetAllProductsQuery, useGetAllCategoriesQuery, useGetAllColorsQuery, useGetFilteredProductsQuery, useGetProductByIdQuery, useCreateOrderMutation, useGetOrdersByUserIdQuery, useGetOrderStatsQuery, useGetAllOrdersQuery, useGetDailySalesQuery, useGetCheckoutSessionStatusQuery, useCreateProductMutation } = api;
+export const { useGetAllProductsQuery, useGetAllCategoriesQuery, useGetAllColorsQuery, useGetFilteredProductsQuery, useGetProductByIdQuery, useCreateOrderMutation, useGetOrdersByUserIdQuery, useGetOrderStatsQuery, useGetAllOrdersQuery, useGetDailySalesQuery, useGetCheckoutSessionStatusQuery, useCreateProductMutation, useGetNewArrivalsQuery } = api;

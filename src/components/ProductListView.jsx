@@ -116,7 +116,6 @@ function ProductListView({ filters }) {
 
         return rangeWithDots;
     };
-
     const handlePageChange = (page) => {
         if (page >= 1 && page <= totalPages && page !== currentPage) {
             setCurrentPage(page);
